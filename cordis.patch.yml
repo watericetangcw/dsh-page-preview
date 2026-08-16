@@ -1,0 +1,8 @@
+# dsh-page-preview bundle patch — inline page previews + floating preview window.
+# NOTE: the profile's own cordis.patch.yml carries the same insert for the
+# live user-layer install. Use exactly ONE of the two layers (bundle layer
+# here, or the profile patch) — inserting the row from both would duplicate it.
+
+- insert:
+    - id: dsh-page-preview
+      name: 'dsh-page-preview'

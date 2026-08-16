@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>dsh-page-preview · Hello World</title>
+  <style>
+    :root {
+      --bg: #0f172a;
+      --card: #1e293b;
+      --accent: #22d3ee;
+      --accent2: #a78bfa;
+      --text: #e2e8f0;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      background: radial-gradient(circle at 20% 20%, #1e293b, var(--bg));
+      font-family: "Segoe UI", "PingFang SC", "Microsoft YaHei", system-ui, sans-serif;
+      color: var(--text);
+    }
+    .card {
+      text-align: center;
+      padding: 3rem 4rem;
+      border-radius: 24px;
+      background: var(--card);
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.45);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    h1 {
+      font-size: 3rem;
+      font-weight: 700;
+      background: linear-gradient(90deg, var(--accent), var(--accent2));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      margin-bottom: 1rem;
+    }
+    p { font-size: 1.1rem; opacity: 0.85; margin-bottom: 0.4rem; }
+    .badge {
+      display: inline-block;
+      margin-top: 1.5rem;
+      padding: 0.4rem 1rem;
+      border-radius: 999px;
+      font-size: 0.85rem;
+      letter-spacing: 0.04em;
+      background: rgba(34, 211, 238, 0.12);
+      color: var(--accent);
+      border: 1px solid rgba(34, 211, 238, 0.35);
+    }
+    #clock { font-variant-numeric: tabular-nums; font-size: 1.3rem; margin-top: 1rem; color: var(--accent2); }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h1>Hello, World! 👋</h1>
+    <p>这是 <strong>dsh-page-preview</strong> 插件的示例页面</p>
+    <p>CSS 与 JS 全部内联，页面完全自包含</p>
+    <span class="badge">preview · hello-world</span>
+    <div id="clock">--:--:--</div>
+  </div>
+  <script>
+    const el = document.getElementById('clock');
+    function tick() {
+      const now = new Date();
+      el.textContent = now.toLocaleTimeString('zh-CN', { hour12: false });
+    }
+    tick();
+    setInterval(tick, 1000);
+  </script>
+</body>
+</html>
