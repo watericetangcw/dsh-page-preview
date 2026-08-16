@@ -3,6 +3,14 @@
   "version": "1.0.0",
   "description": "DSH web bundle: inline page previews from `html page-preview` fences plus a floating, session-scoped preview window for local HTML projects and http(s) URLs.",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/watericetangcw/dsh-page-preview.git"
+  },
+  "homepage": "https://github.com/watericetangcw/dsh-page-preview#readme",
+  "bugs": {
+    "url": "https://github.com/watericetangcw/dsh-page-preview/issues"
+  },
   "type": "module",
   "main": "lib/index.js",
   "exports": {
