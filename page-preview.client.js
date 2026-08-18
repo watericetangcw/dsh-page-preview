@@ -7,6 +7,11 @@
 // Feature 1 (inline preview): turnTail chain priority -1 → fence panes + files row.
 
 const IFRAME_SANDBOX = 'allow-scripts allow-same-origin allow-forms allow-modals allow-popups allow-downloads'
+// A served-route document (src=reg.url) comes from the host's OWN webserver
+// origin; allow-scripts + allow-same-origin there is no sandbox at all — its
+// scripts run in the host page's origin. Served pages drop allow-same-origin;
+// only inline srcdoc (opaque origin) keeps it.
+const IFRAME_SANDBOX_SERVED = 'allow-scripts allow-forms allow-modals allow-popups allow-downloads'
 const VIRTUAL_MIN_WIDTH = 1024
 
 const CSS = [
@@ -443,7 +448,7 @@ return {
             key: reg.token + ':' + reg.version,
             className: 'dsh-pv-frame',
             src: reg.url,
-            sandbox: IFRAME_SANDBOX,
+            sandbox: IFRAME_SANDBOX_SERVED,
             title: '页面预览: ' + reg.label,
           }),
         )
@@ -466,7 +471,7 @@ return {
           // rounding so no white hairline shows on the right/bottom.
           style: { width: (virtualW + 2) + 'px', height: (iframeH + 2) + 'px', transform: 'scale(' + scale + ')' },
           src: reg.url,
-          sandbox: IFRAME_SANDBOX,
+          sandbox: IFRAME_SANDBOX_SERVED,
           title: '页面预览: ' + reg.label,
         })
       } else {
@@ -474,7 +479,7 @@ return {
           key: reg.token + ':' + reg.version,
           className: 'dsh-pv-frame',
           src: reg.url,
-          sandbox: IFRAME_SANDBOX,
+          sandbox: IFRAME_SANDBOX_SERVED,
           title: '页面预览: ' + reg.label,
         })
       }

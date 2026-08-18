@@ -66,6 +66,27 @@ function extname(p) {
   const i = b.lastIndexOf('.')
   return i < 0 ? '' : b.slice(i + 1).toLowerCase()
 }
+// Fold `.`/`..` segments away — the local join() concatenates but never
+// normalizes, so a served path must be canonicalized before it can be trusted
+// to still sit under rootDir. Without this, decodeURIComponent turning `%2f`
+// into a slash smuggles a `..%2f..%2f` segment past the per-segment `..` check
+// and join()+read escapes rootDir (fs-sandbox contains writes, NOT reads).
+function normalizePosix(p) {
+  const s = toPosix(p)
+  const absolute = s.charAt(0) === '/'
+  const out = []
+  for (const seg of s.split('/')) {
+    if (seg === '' || seg === '.') continue
+    if (seg === '..') { if (out.length > 0 && out[out.length - 1] !== '..') out.pop(); else if (!absolute) out.push('..') }
+    else out.push(seg)
+  }
+  return (absolute ? '/' : '') + out.join('/')
+}
+function isWithin(rootDir, child) {
+  const root = normalizePosix(rootDir).replace(/\/+$/, '')
+  const c = normalizePosix(child)
+  return c === root || c.startsWith(root + '/')
+}
 function isHttpUrl(s) { return /^https?:\/\//i.test(String(s).trim()) }
 
 const PROMPT_GUIDANCE = [
@@ -344,6 +365,10 @@ return {
         if (reg === null) return sendText(res, 404, 'Unknown preview token')
         const rel = parts.slice(1).join('/')
         const filePath = (rel === '' || rel === reg.entryFile) ? join(reg.rootDir, reg.entryFile) : join(reg.rootDir, rel)
+        // Final containment gate: the per-segment `..` filter above is not
+        // enough (decoded `%2f` smuggles slashes into one segment), so refuse
+        // any resolved path that escapes the registered rootDir.
+        if (!isWithin(reg.rootDir, filePath)) return sendText(res, 404, 'Not found')
         let probe = null
         try { probe = await resolvePath(filePath) } catch (err) { console.error('preview fs error:', String(err && err.message ? err.message : err)) }
         if (probe === null || probe.info.type !== 'file') return sendText(res, 404, 'Not found: ' + filePath)
